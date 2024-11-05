@@ -6,7 +6,7 @@ export const getTransacciones = async (req, res) => {
 
         const connection = await getConnection()
         const result = await connection.query('SELECT * FROM plataformabancaestebanquito.transacciones');
-        res.json(result);
+        res.json(result[0]);
 
 
 
@@ -24,7 +24,7 @@ export const getPrestamos = async (req, res) => {
 
         const connection = await getConnection()
         const result = await connection.query('SELECT * FROM plataformabancaestebanquito.prestamos');
-        res.json(result);
+        res.json(result[0]);
 
 
 
@@ -42,7 +42,7 @@ export const getReportes = async (req, res) => {
 
         const connection = await getConnection()
         const result = await connection.query('SELECT * FROM plataformabancaestebanquito.reportes');
-        res.json(result);
+        res.json(result[0]);
 
 
 
@@ -60,7 +60,7 @@ export const getUsuarios = async (req, res) => {
 
         const connection = await getConnection()
         const result = await connection.query('SELECT * FROM plataformabancaestebanquito.usuarios');
-        res.json(result);
+        res.json(result[0]);
 
 
 

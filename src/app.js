@@ -1,10 +1,18 @@
 import express from 'express';
-import router  from './routes/estebanquito.route.js';
+import { config } from 'dotenv';
+import yourRoutes from './routes/estebanquito.route.js';
 
+config();
 const app = express();
 
-app.set('port', 3000)
+// Middleware para parsear el cuerpo de las solicitudes JSON
+app.use(express.json());
 
-app.use(router)
+// Configuración del puerto
+const PORT = process.env.PORT || 3000;
+app.set('port', PORT);
+
+// Rutas
+app.use('/api', yourRoutes); // Todas las rutas estarán prefijadas con /api
 
 export default app;
