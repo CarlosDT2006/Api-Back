@@ -31,3 +31,23 @@ export const getReporteFinanciero = async (req, res) => {
         res.status(500).send('Error al generar reporte');
     }
 };
+
+export const getDeudasUsuario = async (req, res) => {
+    try {
+        const { usuarioId } = req.params;
+        const connection = await getConnection();
+
+        // Obtener deudas pendientes
+        const [deudas] = await connection.query(
+            `SELECT SUM(monto) AS total_deudas FROM prestamos WHERE usuario_id = ? AND estado = 'pendiente'`,
+            [usuarioId]
+        );
+
+        res.json({
+            deudas: deudas[0].total_deudas || 0,
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error al obtener deudas');
+    }
+};

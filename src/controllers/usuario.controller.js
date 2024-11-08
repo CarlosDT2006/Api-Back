@@ -2,11 +2,11 @@ import { getConnection } from '../database/database.js';
 
 export const registerUsuario = async (req, res) => {
     try {
-        const { nombre, email, contraseña, numero_cuenta, tipo, saldo } = req.body;
+        const { nombre, email, contraseña, cuenta_id, tipo, saldo } = req.body;
         const connection = await getConnection();
         const result = await connection.query(
-            `INSERT INTO usuarios (nombre, email, contraseña, numero_cuenta, tipo, saldo) VALUES (?, ?, ?, ?, ?, ?)`,
-            [nombre, email, contraseña, numero_cuenta, tipo, saldo]
+            `INSERT INTO usuarios (nombre, email, contraseña, cuenta_id, tipo, saldo) VALUES (?, ?, ?, ?, ?, ?)`,
+            [nombre, email, contraseña, cuenta_id, tipo, saldo]
         );
         res.status(201).json({ message: 'Usuario registrado', usuarioId: result.insertId });
     } catch (error) {
@@ -20,13 +20,18 @@ export const loginUsuario = async (req, res) => {
         const { email, contraseña } = req.body;
         const connection = await getConnection();
         const [result] = await connection.query(
-            `SELECT * FROM usuarios WHERE email = ? AND contraseña = ?`,
+            `SELECT id FROM usuarios WHERE email = ? AND contraseña = ?`,
             [email, contraseña]
         );
+        
         if (result.length > 0) {
-            res.status(200).json({ message: 'Inicio de sesión exitoso', usuario: result[0] });
+            const usuarioId = result[0].id;
+            res.status(200).json({
+                message: 'Inicio de sesión exitoso',
+                usuarioId
+            });
         } else {
-            res.status(401).send('Credenciales inválidas');
+            res.status(404).json({ message: 'No se ha encontrado el usuario. Por favor, revisa tus credenciales.' });
         }
     } catch (error) {
         console.error(error);
